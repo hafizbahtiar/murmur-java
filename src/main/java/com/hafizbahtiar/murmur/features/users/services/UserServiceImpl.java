@@ -1,10 +1,8 @@
 package com.hafizbahtiar.murmur.features.users.services;
 
-import com.hafizbahtiar.murmur.features.users.dto.UserRegistrationRequest;
-import com.hafizbahtiar.murmur.features.users.dto.UserResponse;
+import com.hafizbahtiar.murmur.features.users.dto.*;
 import com.hafizbahtiar.murmur.features.users.entities.User;
-import com.hafizbahtiar.murmur.features.users.exceptions.UserAlreadyExistsException;
-import com.hafizbahtiar.murmur.features.users.exceptions.UserNotFoundException;
+import com.hafizbahtiar.murmur.features.users.exceptions.*;
 import com.hafizbahtiar.murmur.features.users.mappers.UserMapper;
 import com.hafizbahtiar.murmur.features.users.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,8 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-//    private final UserMapper userMapper;
-//    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private PasswordEncoder passwordEncoder;
 
     @Override
     @Transactional(readOnly = true)
@@ -36,15 +34,13 @@ public class UserServiceImpl implements UserService {
                 throw UserAlreadyExistsException.username(request.getUsername());
             }
 
-//            User user = userMapper.toEntity(request);
+            User user = userMapper.toEntity(request);
 
-//            user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+            user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
-//            User savedUser = userRepository.saveAndFlush(user);
+            User savedUser = userRepository.saveAndFlush(user);
 
-//            UserResponse response = userMapper.toResponse(savedUser);
-
-            return null;
+            return userMapper.toResponse(savedUser);
         } catch (UserAlreadyExistsException e) {
             // Re-throw user already exists exceptions
             throw e;
@@ -58,24 +54,21 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     public UserResponse getById(Long id) {
         User user = userRepository.findById(id).orElseThrow(() -> UserNotFoundException.byId(id));
-//        return userMapper.toResponse(user);
-        return null;
+        return userMapper.toResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserResponse getUserByUsername(String username) {
         User user = userRepository.findByUsernameIgnoreCase(username).orElseThrow(() -> UserNotFoundException.byUsername(username));
-//        return userMapper.toResponse(user);
-        return null;
+        return userMapper.toResponse(user);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<UserResponse> getUsers() {
         List<User> users = userRepository.findByActiveTrue();
-//        return userMapper.toResponseList(users);
-        return null;
+        return userMapper.toResponseList(users);
     }
 
     @Override

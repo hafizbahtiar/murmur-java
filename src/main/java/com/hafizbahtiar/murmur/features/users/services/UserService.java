@@ -1,7 +1,6 @@
 package com.hafizbahtiar.murmur.features.users.services;
 
-import com.hafizbahtiar.murmur.features.users.dto.UserRegistrationRequest;
-import com.hafizbahtiar.murmur.features.users.dto.UserResponse;
+import com.hafizbahtiar.murmur.features.users.dto.*;
 
 import java.util.List;
 

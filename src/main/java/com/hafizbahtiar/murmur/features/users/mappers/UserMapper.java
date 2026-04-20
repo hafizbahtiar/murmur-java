@@ -1,7 +1,6 @@
 package com.hafizbahtiar.murmur.features.users.mappers;
 
-import com.hafizbahtiar.murmur.features.users.dto.UserRegistrationRequest;
-import com.hafizbahtiar.murmur.features.users.dto.UserResponse;
+import com.hafizbahtiar.murmur.features.users.dto.*;
 import com.hafizbahtiar.murmur.features.users.entities.User;
 import org.mapstruct.*;
 
