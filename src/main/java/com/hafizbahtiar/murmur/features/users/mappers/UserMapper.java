@@ -9,10 +9,6 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-    UserResponse toResponse(User user);
-
-    List<UserResponse> toResponseList(List<User> users);
-
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
@@ -24,6 +20,17 @@ public interface UserMapper {
     @Mapping(target = "role", constant = "USER")
     User toEntity(UserRegistrationRequest request);
 
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "passwordHash", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "version", ignore = true)
+    void updateEntityFromRequest(UserUpdateRequest request, @MappingTarget User user);
+
+    UserResponse toResponse(User user);
+
+    List<UserResponse> toResponseList(List<User> users);
+
     @Mapping(target = "id", source = "id")
     @Mapping(target = "uuid", source = "uuid")
     @Mapping(target = "email", source = "email")
@@ -33,6 +40,4 @@ public interface UserMapper {
     @Mapping(target = "active", source = "active")
     @Mapping(target = "emailVerified", source = "emailVerified")
     UserResponse.Summary toSummary(User user);
-
-    List<UserResponse.Summary> toSummaryList(List<User> users);
 }

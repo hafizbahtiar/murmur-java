@@ -45,7 +45,7 @@ public class UserServiceImpl implements UserService {
             // Re-throw user already exists exceptions
             throw e;
         } catch (Exception e) {
-//            log.error("Unexpected error during user registration for email: {}", request.getEmail(), e);
+            log.error("Unexpected error during user registration for email: {}", request.getEmail(), e);
             throw new RuntimeException("Failed to register user: " + e.getMessage(), e);
         }
     }
@@ -69,6 +69,38 @@ public class UserServiceImpl implements UserService {
     public List<UserResponse> getUsers() {
         List<User> users = userRepository.findByActiveTrue();
         return userMapper.toResponseList(users);
+    }
+
+    @Override
+    public UserResponse updateUser(Long id, UserUpdateRequest request) {
+        User user = userRepository.findById(id).orElseThrow(() -> UserNotFoundException.byId(id));
+
+        if (request.getEmail() != null && !request.getEmail().equalsIgnoreCase(user.getEmail())) {
+            if (userRepository.existsByEmailAndIdNot(request.getEmail(), id)) {
+                throw UserAlreadyExistsException.email(request.getEmail());
+            }
+        }
+
+        if (request.getUsername() != null && !request.getUsername().equalsIgnoreCase(user.getUsername())) {
+            if (userRepository.existsByUsernameAndIdNot(request.getUsername(), id)) {
+                throw UserAlreadyExistsException.username(request.getUsername());
+            }
+        }
+
+        userMapper.updateEntityFromRequest(request, user);
+
+        User updatedUser = userRepository.save(user);
+
+        return userMapper.toResponse(updatedUser);
+    }
+
+    @Override
+    public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> UserNotFoundException.byId(id));
+
+        user.deactivate();
+
+        userRepository.save(user);
     }
 
     @Override
