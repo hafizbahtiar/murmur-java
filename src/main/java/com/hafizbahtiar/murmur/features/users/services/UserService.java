@@ -3,13 +3,18 @@ package com.hafizbahtiar.murmur.features.users.services;
 import com.hafizbahtiar.murmur.features.users.dto.*;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface UserService {
     UserResponse register(UserRegistrationRequest request);
 
     UserResponse getById(Long id);
 
-    UserResponse getUserByUsername(String username);
+    UserResponse getByUuid(UUID uuid);
+
+    UserResponse getByEmail(String email);
+
+    UserResponse getByUsername(String username);
 
     List<UserResponse> getUsers();
 
@@ -20,4 +25,6 @@ public interface UserService {
     boolean emailExists(String email);
 
     boolean usernameExists(String username);
+
+    UserResponse updateUserRole(Long userId, String newRole);
 }

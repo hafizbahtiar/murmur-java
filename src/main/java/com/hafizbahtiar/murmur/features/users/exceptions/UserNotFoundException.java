@@ -1,5 +1,7 @@
 package com.hafizbahtiar.murmur.features.users.exceptions;
 
+import java.util.UUID;
+
 public class UserNotFoundException extends RuntimeException {
     public UserNotFoundException(String message) {
         super(message);
@@ -11,6 +13,10 @@ public class UserNotFoundException extends RuntimeException {
 
     public static UserNotFoundException byId(Long id) {
         return new UserNotFoundException("User not found with ID: " + id);
+    }
+
+    public static UserNotFoundException byUuid(UUID uuid) {
+        return new UserNotFoundException("User not found with UUID: " + uuid);
     }
 
     public static UserNotFoundException byEmail(String email) {
