@@ -26,50 +26,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserResponse register(UserRegistrationRequest request) {
-        log.info("Register attempt started for email={} username={}",
-                request.getEmail(), request.getUsername());
 
         try {
-            // Check email
-            log.debug("Checking if email already exists: {}", request.getEmail());
             if (userRepository.existsByEmailIgnoreCase(request.getEmail())) {
-                log.warn("Registration failed - email already exists: {}", request.getEmail());
                 throw UserAlreadyExistsException.email(request.getEmail());
             }
 
-            // Check username
-            log.debug("Checking if username already exists: {}", request.getUsername());
             if (userRepository.existsByUsernameIgnoreCase(request.getUsername())) {
-                log.warn("Registration failed - username already exists: {}", request.getUsername());
                 throw UserAlreadyExistsException.username(request.getUsername());
             }
 
-            // Mapping
-            log.debug("Mapping UserRegistrationRequest to User entity");
             User user = userMapper.toEntity(request);
 
-            // Password encoding
-            log.debug("Encoding password for email={}", request.getEmail());
             user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
 
-            // Save
-            log.debug("Saving user to database");
             User savedUser = userRepository.saveAndFlush(user);
 
-            log.info("User successfully registered with id={} email={}",
-                    savedUser.getId(), savedUser.getEmail());
-
-            // Mapping response
-            log.debug("Mapping saved User to UserResponse");
             return userMapper.toResponse(savedUser);
 
         } catch (UserAlreadyExistsException e) {
-            log.warn("Registration rejected: {}", e.getMessage());
             throw e;
-
         } catch (Exception e) {
-            log.error("Unexpected error during registration for email={}",
-                    request.getEmail(), e);
             throw new RuntimeException("Failed to register user", e);
         }
     }
