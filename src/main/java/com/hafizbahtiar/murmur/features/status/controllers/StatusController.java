@@ -6,7 +6,7 @@ import com.hafizbahtiar.murmur.features.status.entities.Status;
 
 @RestController
 public class StatusController {
-    @RequestMapping("/status")
+    @GetMapping("/status")
     public Status status() {
         return new Status("UP", "Murmur");
     }

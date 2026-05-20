@@ -1,11 +1,9 @@
 package com.hafizbahtiar.murmur.features.auth.services;
 
-import com.hafizbahtiar.murmur.features.users.dto.UserResponse;
-
-import java.util.UUID;
+import com.hafizbahtiar.murmur.features.auth.dto.SignInResponse;
 
 public interface AuthService {
-    UserResponse signIn(String email, String password);
+    SignInResponse signIn(String email, String password);
 
-    boolean signOut(UUID uuid);
+    boolean signOut(String email);
 }

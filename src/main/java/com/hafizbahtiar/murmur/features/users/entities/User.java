@@ -1,6 +1,6 @@
 package com.hafizbahtiar.murmur.features.users.entities;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.UUID;
 
 import org.hibernate.annotations.*;
@@ -27,10 +27,6 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    /**
-     * Public UUID for user identification (exposed in APIs)
-     * Generated automatically on creation via @PrePersist
-     */
     @Column(name = "uuid", nullable = false, unique = true, updatable = false)
     private UUID uuid;
 
@@ -52,27 +48,15 @@ public class User {
     @Column(length = 20)
     private String phone;
 
-    /**
-     * User bio/description
-     */
     @Column(length = 1000)
     private String bio;
 
-    /**
-     * User location
-     */
     @Column(length = 200)
     private String location;
 
-    /**
-     * User website URL
-     */
     @Column(length = 500)
     private String website;
 
-    /**
-     * User avatar URL
-     */
     @Column(length = 500)
     private String avatarUrl;
 
@@ -87,20 +71,17 @@ public class User {
 
     @Column(nullable = false, updatable = false)
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 
     @UpdateTimestamp
-    private LocalDateTime updatedAt;
+    private Instant updatedAt;
 
-    private LocalDateTime lastLoginAt;
+    private Instant lastLoginAt;
 
     @Version
     @Column(nullable = false)
     private Long version = 0L;
 
-    /**
-     * Generate UUID before persisting if not already set
-     */
     @PrePersist
     protected void generateUuid() {
         if (this.uuid == null) {
@@ -108,7 +89,6 @@ public class User {
         }
     }
 
-    // Constructor for registration
     public User(String email, String username, String passwordHash) {
         this.email = email;
         this.username = username;
@@ -118,7 +98,6 @@ public class User {
         this.active = true;
     }
 
-    // Business methods
     public boolean isActive() {
         return Boolean.TRUE.equals(this.active);
     }
@@ -140,7 +119,7 @@ public class User {
     }
 
     public void updateLastLogin() {
-        this.lastLoginAt = LocalDateTime.now();
+        this.lastLoginAt = Instant.now();
     }
 
     public String getFullName() {
@@ -156,10 +135,8 @@ public class User {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o)
-            return true;
-        if (o == null || getClass() != o.getClass())
-            return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         return id != null && id.equals(user.id);
     }
@@ -172,7 +149,7 @@ public class User {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
+                "uuid=" + uuid +
                 ", email='" + email + '\'' +
                 ", username='" + username + '\'' +
                 ", firstName='" + firstName + '\'' +

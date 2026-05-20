@@ -10,6 +10,7 @@ import java.util.List;
 public interface UserMapper {
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
@@ -20,18 +21,24 @@ public interface UserMapper {
     @Mapping(target = "role", constant = "USER")
     User toEntity(UserRegistrationRequest request);
 
+    @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "uuid", ignore = true)
     @Mapping(target = "passwordHash", ignore = true)
     @Mapping(target = "createdAt", ignore = true)
     @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "lastLoginAt", ignore = true)
     @Mapping(target = "version", ignore = true)
+    @Mapping(target = "role", ignore = true)
+    @Mapping(target = "active", ignore = true)
+    @Mapping(target = "emailVerified", ignore = true)
     void updateEntityFromRequest(UserUpdateRequest request, @MappingTarget User user);
 
+    @Mapping(target = "fullName", expression = "java(user.getFullName())")
     UserResponse toResponse(User user);
 
     List<UserResponse> toResponseList(List<User> users);
 
-    @Mapping(target = "id", source = "id")
     @Mapping(target = "uuid", source = "uuid")
     @Mapping(target = "email", source = "email")
     @Mapping(target = "username", source = "username")

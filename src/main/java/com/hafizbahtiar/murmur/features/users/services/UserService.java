@@ -1,8 +1,9 @@
 package com.hafizbahtiar.murmur.features.users.services;
 
 import com.hafizbahtiar.murmur.features.users.dto.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-import java.util.List;
 import java.util.UUID;
 
 public interface UserService {
@@ -16,7 +17,7 @@ public interface UserService {
 
     UserResponse getByUsername(String username);
 
-    List<UserResponse> getUsers();
+    Page<UserResponse> getUsers(Pageable pageable);
 
     UserResponse updateUser(Long id, UserUpdateRequest request);
 
